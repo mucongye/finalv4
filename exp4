@@ -132,7 +132,7 @@ def main():
             model_keep.load_state_dict(saved_state_dict)
     else:
         raise NotImplementedError(f"Not yet supported {cfg.MODEL}")
-    print('Model loaded')
+
     target_dataset = CityscapesDataSet(root=cfg.DATA_DIRECTORY_TARGET,
                                        list_path=cfg.DATA_LIST_TARGET,
                                        set=cfg.SET_TARGET,
