@@ -31,7 +31,7 @@ class Configuration(object):
     ABSTRACT = 'uncertain self training with dropout, layer4=0.1, pre-train model is 41'
     DA_METHOD = os.path.basename(__file__).split('.')[0]
 
-    CUDA_VISIBLE_DEVICES = '0'
+    CUDA_VISIBLE_DEVICES = '1'
 
     M = 4
     T = 16
