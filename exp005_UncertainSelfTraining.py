@@ -31,7 +31,7 @@ class Configuration(object):
     ABSTRACT = 'uncertain self training with dropout, layer4=0.1, pre-train model is 41'
     DA_METHOD = os.path.basename(__file__).split('.')[0]
 
-    CUDA_VISIBLE_DEVICES = '1'
+    CUDA_VISIBLE_DEVICES = '0'
 
     M = 4
     T = 16
@@ -128,8 +128,6 @@ def main():
             saved_state_dict = torch.load(cfg.RESTORE_FROM)
             model.load_state_dict(saved_state_dict)
 
-            model_keep = Res_Deeplab(num_classes=cfg.NUM_CLASSES)
-            model_keep.load_state_dict(saved_state_dict)
     else:
         raise NotImplementedError(f"Not yet supported {cfg.MODEL}")
 
@@ -150,9 +148,6 @@ def main():
     device = cfg.GPU_ID
     model.train()
     model.to(device)
-
-    model_keep.eval()
-    model_keep.to(device)
 
     cudnn.benchmark = True
     cudnn.enabled = True
@@ -182,13 +177,13 @@ def main():
         uncertain_list = list()
         with torch.no_grad():
 
-            GT = model_keep(images)
+            GT = model(images)
             GT = interp_target(GT)
             GT = F.softmax(GT)
             GT = torch.argmax(GT, dim=1)
 
             for _ in range(cfg.T):
-                U = model_keep(images, drop_out=True)
+                U = model(images, drop_out=True)
                 U = interp_target(U)
                 U = F.softmax(U)
                 uncertain_list.append(U)
